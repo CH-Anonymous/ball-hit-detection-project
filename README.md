@@ -1,5 +1,3 @@
-Here's a detailed and properly formatted `README.md` file for your ball hit detection project:
-
 ---
 
 ## **Ball Hit Detection Project**
@@ -41,7 +39,7 @@ The system uses a webcam to detect ball hits within a taped-off frame on a wall.
 
 #### **Step 1: Clone the Repository**
 ```bash
-git clone https://github.com/your-username/ball-hit-detection-project.git
+git clone https://github.com/CH-Anonymous/ball-hit-detection-project.git
 ```
 
 #### **Step 2: Install Dependencies**
@@ -95,8 +93,7 @@ ball-hit-detection-project/
 ├── src/
 │   └── ball_hit_detection.py # Main Python script for hit detection
 ├── assets/
-│   └── demo_video.mp4        # Optional demo video (if available)
-└── requirements.txt          # Python dependencies list (optional)
+    └── demo_video.mp4        # Optional demo video (if available)
 ```
 
 ---
