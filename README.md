@@ -134,10 +134,4 @@ Contributions are welcome! Please fork the repository and submit a pull request 
 
 ---
 
-### **License**
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
 This `README.md` provides a complete description of your project, making it easy for anyone to understand how to set up, use, and contribute to the project. Make sure to include any demo video or images you have to make the submission even more compelling.
