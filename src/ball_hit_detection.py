@@ -34,7 +34,7 @@ def detect_tennis_ball(frame, lower_color, upper_color):
     # Find contours of the detected ball
     contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
-    return contours
+    return mask, contours
 
 # 4. Mapping the Hit to the Virtual Screen
 def map_to_virtual_screen(x, y, frame_width, frame_height, virtual_screen_width=1920, virtual_screen_height=1080):
@@ -92,7 +92,11 @@ def main():
         lower_color = np.array([lower_h, lower_s, lower_v])
         upper_color = np.array([upper_h, upper_s, upper_v])
 
-        contours = detect_tennis_ball(preprocessed_frame, lower_color, upper_color)
+        # Detect the tennis ball (get mask and contours)
+        mask, contours = detect_tennis_ball(preprocessed_frame, lower_color, upper_color)
+
+        # Show the mask to debug and visualize
+        cv2.imshow('Mask', mask)
 
         if contours:
             # Find the largest contour assuming it's the tennis ball
