@@ -50,7 +50,7 @@ pip install numpy opencv-python
 ```
 
 #### **Step 3: Run the Project**
-Run the `ball_hit_detection.py` script:
+Run the `ball_hit_detection.py` script:(If this not working try It manually to run)
 
 ```bash
 python src/ball_hit_detection.py
@@ -92,8 +92,7 @@ ball-hit-detection-project/
 ├── README.md                # Project documentation
 ├── src/
 │   └── ball_hit_detection.py # Main Python script for hit detection
-├── assets/
-    └── demo_video.mp4        # Optional demo video (if available)
+
 ```
 
 ---
@@ -103,28 +102,6 @@ ball-hit-detection-project/
 - Improve hit detection accuracy under varying lighting conditions.
 - Allow for dynamic resizing of the frame during operation.
 - Implement sound feedback when a hit is detected.
-
----
-
-### **Demo**
-
-If possible, include a **demo video** in the `assets/` folder that shows how the system detects ball hits and maps them onto the virtual screen.
-
----
-
-### **Additional Assets**
-
-1. **Demo Video**:
-   - If you create a demonstration of the project in action, you can include a video file (`demo_video.mp4`) in the `assets/` folder and link it in the README.
-
-   ```bash
-   ball-hit-detection-project/
-   └── assets/
-       └── demo_video.mp4
-   ```
-
-2. **Images (Optional)**:
-   - You can also include example images showing the frame setup and virtual screen results.
 
 ---
 
