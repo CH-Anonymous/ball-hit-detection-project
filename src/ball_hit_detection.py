@@ -1,86 +1,68 @@
 import cv2
 import numpy as np
 
-# 1. Webcam Setup
-def initialize_webcam():
-    cap = cv2.VideoCapture(0)
-    if not cap.isOpened():
-        print("Failed to initialize webcam.")
-        return None
-    return cap
+# Start webcam
+cap = cv2.VideoCapture(0)
 
-# 2. Tennis Ball Detection Using Color Filtering
-def detect_tennis_ball(frame):
-    # Tennis ball color range in HSV (adjust as needed)
-    lower_color = np.array([25, 100, 100])
-    upper_color = np.array([45, 255, 255])
+# Tennis ball color range in HSV
+lower_color = np.array([25, 100, 100])
+upper_color = np.array([45, 255, 255])
 
-    # Convert frame to HSV
-    hsv_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+# Define virtual screen size (16:9 ratio)
+virtual_screen_width = 1920
+virtual_screen_height = 1080
 
-    # Create a mask to filter the color
-    mask = cv2.inRange(hsv_frame, lower_color, upper_color)
+# Additional scaling factor for the hit location
+scaling_factor = 1.5  # Increase this value to enlarge the mapped position
 
-    # Show mask for debugging
-    cv2.imshow('Mask', mask)
-
-    # Find contours of the detected ball
-    contours, _ = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-    return contours
-
-# 3. Mapping the Hit to the Virtual Screen
-def map_to_virtual_screen(x, y, frame_width, frame_height, virtual_screen_width=1920, virtual_screen_height=1080):
+def map_to_virtual_screen(x, y, frame_width, frame_height):
     scale_x = virtual_screen_width / frame_width
     scale_y = virtual_screen_height / frame_height
-    return int(x * scale_x), int(y * scale_y)
 
-# 4. Visualizing the Hit on the Virtual Screen
-def visualize_hit(virtual_screen, hit_x, hit_y):
-    cv2.circle(virtual_screen, (hit_x, hit_y), 10, (0, 0, 0), -1)  # Draw a black circle at the hit point
-    cv2.imshow('Virtual Hit Display', virtual_screen)
+    # Apply additional scaling factor to exaggerate the hit position
+    scaled_x = x * scale_x * scaling_factor
+    scaled_y = y * scale_y * scaling_factor
 
-# 5. Main Logic for Detecting Hits and Mapping to Virtual Screen
-def main():
-    cap = initialize_webcam()
-    if cap is None:
-        return
+    # Ensure the values stay within the bounds of the virtual screen
+    scaled_x = min(max(int(scaled_x), 0), virtual_screen_width)
+    scaled_y = min(max(int(scaled_y), 0), virtual_screen_height)
 
-    frame_width, frame_height = 640, 480  # Webcam resolution
-    virtual_screen_width, virtual_screen_height = 1920, 1080  # Virtual screen size (16:9 ratio)
+    return scaled_x, scaled_y
 
-    while True:
-        ret, frame = cap.read()
-        if not ret:
-            print("Failed to grab frame.")
-            break
+# Example hit mapping
+frame_width, frame_height = 640, 480  # Webcam resolution
 
-        # Optional: Adjust brightness/contrast for better visibility
-        frame = cv2.convertScaleAbs(frame, alpha=1.5, beta=30)
+while True:
+    ret, frame = cap.read()
+    if not ret:
+        break
 
-        contours = detect_tennis_ball(frame)  # Detect tennis ball
+    # Convert to HSV and detect ball
+    hsv_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+    mask = cv2.inRange(hsv_frame, lower_color, upper_color)
+    contours, _ = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
-        for contour in contours:
-            if cv2.contourArea(contour) > 500:  # Adjust contour area if necessary
-                x, y, w, h = cv2.boundingRect(contour)
+    for contour in contours:
+        if cv2.contourArea(contour) > 1000:  # Ignore small areas (noise)
+            x, y, w, h = cv2.boundingRect(contour)
 
-                # Map hit location to virtual screen
-                hit_x, hit_y = map_to_virtual_screen(x + w // 2, y + h // 2, frame_width, frame_height, virtual_screen_width, virtual_screen_height)
+            # Map the hit location to virtual screen with scaling
+            hit_x, hit_y = map_to_virtual_screen(x + w // 2, y + h // 2, frame_width, frame_height)
 
-                # Create a blank virtual screen
-                virtual_screen = np.ones((virtual_screen_height, virtual_screen_width, 3), np.uint8) * 255
+            # Visualize the hit on a blank virtual screen
+            virtual_screen = np.ones((virtual_screen_height, virtual_screen_width, 3), np.uint8) * 255
+            cv2.circle(virtual_screen, (hit_x, hit_y), 10, (0, 0, 0), -1)  # Draw a black circle for the hit
 
-                # Visualize hit on virtual screen
-                visualize_hit(virtual_screen, hit_x, hit_y)
+            # Display the virtual screen with hit
+            cv2.imshow('Virtual Hit Display', virtual_screen)
 
-        # Display the webcam feed
-        cv2.imshow('Webcam Feed', frame)
+    # Display the webcam feed
+    cv2.imshow('Tennis Ball Detection', frame)
 
-        if cv2.waitKey(1) & 0xFF == ord('q'):  # Press 'q' to quit
-            break
+    # Break the loop when 'q' is pressed
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
 
-    cap.release()
-    cv2.destroyAllWindows()
-
-# Execute the main function
-if __name__ == "__main__":
-    main()
+# Release the camera and close all windows
+cap.release()
+cv2.destroyAllWindows()
