@@ -11,7 +11,7 @@ def initialize_webcam():
 
 # 2. Tennis Ball Detection Using Color Filtering
 def detect_tennis_ball(frame):
-    # Tennis ball color range in HSV (yellow-green)
+    # Tennis ball color range in HSV (adjust as needed)
     lower_color = np.array([25, 100, 100])
     upper_color = np.array([45, 255, 255])
 
@@ -20,6 +20,9 @@ def detect_tennis_ball(frame):
 
     # Create a mask to filter the color
     mask = cv2.inRange(hsv_frame, lower_color, upper_color)
+
+    # Show mask for debugging
+    cv2.imshow('Mask', mask)
 
     # Find contours of the detected ball
     contours, _ = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
@@ -51,10 +54,13 @@ def main():
             print("Failed to grab frame.")
             break
 
+        # Optional: Adjust brightness/contrast for better visibility
+        frame = cv2.convertScaleAbs(frame, alpha=1.5, beta=30)
+
         contours = detect_tennis_ball(frame)  # Detect tennis ball
 
         for contour in contours:
-            if cv2.contourArea(contour) > 1000:  # Ignore small areas (noise)
+            if cv2.contourArea(contour) > 500:  # Adjust contour area if necessary
                 x, y, w, h = cv2.boundingRect(contour)
 
                 # Map hit location to virtual screen
