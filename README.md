@@ -91,7 +91,7 @@ ball-hit-detection-project/
 │
 ├── README.md                # Project documentation
 ├── src/
-│   └── ball_hit_detection.py # Main Python script for hit detection
+    └── ball_hit_detection.py # Main Python script for hit detection
 
 ```
 
