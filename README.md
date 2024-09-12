@@ -89,9 +89,12 @@ python src/ball_hit_detection.py
 ```bash
 ball-hit-detection-project/
 │
-├── README.md                # Project documentation
-└── src/
-     └── ball_hit_detection.py # Main Python script for hit detection
+├── README.md                
+├── src/
+│   └── ball_hit_detection.py 
+└── assets/
+    └── demo_video.mp4  
+
 
 ```
 
@@ -102,6 +105,10 @@ ball-hit-detection-project/
 - Improve hit detection accuracy under varying lighting conditions.
 - Allow for dynamic resizing of the frame during operation.
 - Implement sound feedback when a hit is detected.
+
+---
+
+### **Contributing**
 
 ---
 
