@@ -36,7 +36,8 @@ def map_to_virtual_screen(x, y, frame_width, frame_height, virtual_screen_width=
 
 # 4. Visualizing the Hit on the Virtual Screen
 def visualize_hit(virtual_screen, hit_x, hit_y):
-    cv2.circle(virtual_screen, (hit_x, hit_y), 30, (0, 0, 0), -1)  # Increased circle radius to 30 for larger spot
+    # Draw a black circle at the hit location
+    cv2.circle(virtual_screen, (hit_x, hit_y), 30, (0, 0, 0), -1)
     cv2.imshow('Virtual Hit Display', virtual_screen)
 
 # 5. Main Logic for Detecting Hits and Mapping to Virtual Screen
@@ -47,6 +48,9 @@ def main():
 
     frame_width, frame_height = 640, 480  # Webcam resolution
     virtual_screen_width, virtual_screen_height = 1920, 1080  # Virtual screen size (16:9 ratio)
+
+    # Create a persistent blank virtual screen (white background)
+    virtual_screen = np.ones((virtual_screen_height, virtual_screen_width, 3), np.uint8) * 255
 
     while True:
         ret, frame = cap.read()
@@ -66,10 +70,7 @@ def main():
                 # Map hit location to virtual screen
                 hit_x, hit_y = map_to_virtual_screen(x + w // 2, y + h // 2, frame_width, frame_height, virtual_screen_width, virtual_screen_height)
 
-                # Create a blank virtual screen
-                virtual_screen = np.ones((virtual_screen_height, virtual_screen_width, 3), np.uint8) * 255
-
-                # Visualize hit on virtual screen
+                # Visualize hit on virtual screen and retain all previous hits
                 visualize_hit(virtual_screen, hit_x, hit_y)
 
         # Display the webcam feed
